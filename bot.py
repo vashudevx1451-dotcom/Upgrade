@@ -24,7 +24,7 @@ session.mount("https://", adapter)
 session.mount("http://", adapter)
 apihelper.SESSION_TIME_TO_LIVE = None
 
-BOT_TOKEN = os.environ.get("BOT_TOKEN", "8726477301:AAGZjQ9V4T_oeA04RDTrnuVuqmuvaG1b09E").strip()
+BOT_TOKEN = os.environ.get("BOT_TOKEN", "8729340477:AAEHpMcVTwOcd3v0VSU60bA30G6n_AWtwM8").strip()
 MAX_RUNTIME_SECONDS = int(os.environ.get("MAX_RUNTIME_SECONDS", str(5 * 3600 + 20 * 60)))  # 5h 20m auto-exit for GitHub Actions
 
 bot = telebot.TeleBot(BOT_TOKEN, threaded=True, num_threads=8)
