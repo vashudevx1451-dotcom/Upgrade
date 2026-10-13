@@ -1,0 +1,48 @@
+name: TeleClean 24x7 Bot (5-Hour Auto Restart)
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Har 5 ghante me auto trigger
+    - cron: '0 */5 * * *'
+
+permissions:
+  actions: write
+  contents: read
+
+# Purana job chal raha ho to use gracefully rok kar naya start karega (0 conflict)
+concurrency:
+  group: teleclean-telegram-bot-24x7
+  cancel-in-progress: true
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Telegram Bot (5 Hours)
+        env:
+          BOT_TOKEN: 8726477301:8729340477:AAEHpMcVTwOcd3v0VSU60bA30G6n_AWtwM8
+          MAX_RUNTIME_SECONDS: '18000'
+        run: python bot.py
+
+      - name: Auto-Restart Next 5-Hour Session Immediately (24/7 Loop)
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Triggering next 5-hour bot session..."
+          gh workflow run "run_bot_24_7.yml" || true
